@@ -1,0 +1,7 @@
+Data Types
+Data Visualization and Exploration
+Data Cleaning
+Introduction to Prediction
+Modeling Techniques
+Introduction to Machine Learning
+Coding Techniques for Machine Learning

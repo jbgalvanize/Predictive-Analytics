@@ -1,0 +1,88 @@
+---
+title: "Web Scrapiong"
+output: pdf_document
+---
+
+In this lab, I would like to give an introduction to web-scraping.  Recently, web-scraping has become an increasing valuable, as people can learn about third parties information that would not otherwise be available.  Companies like [Twitter](http://www.r-bloggers.com/getting-started-with-twitter-in-r/)  and [Facebook](http://thinktostart.com/analyzing-facebook-with-r/) have APIs that allow you to connect with them directly using libraries that you can obtain from github or built into R.  This is not generally called web-scraping.  [Here](http://thinktostart.com/analyzing-facebook-with-r/) are directions for hitting the Facebook API for your Facebook.   
+
+In general, web-scraping may be a much more painful and gross looking process than what we obtain by going through a web API.  We can interact directly with a website by using a built in scraper library in R.  One of the most popular libraries for doing this is the rvest library.
+
+For an introduction to getting information from the web, let's consider the above link to hit Facebook's API.  You will need to use the following code:
+
+```{r}
+library(devtools)
+install_github("pablobarbera/Rfacebook/Rfacebook")
+require("Rfacebook")
+```
+
+Then following the above directions to get your facebook authentication you will want to post that as follows:
+
+```{r}
+fb_oauth <- fbOAuth(app_id="123456789", app_secret="1A2B3C4D",extended_permissions = TRUE)
+```
+
+Follow the rest of the steps, and savev this to use for later:
+
+```{r, echo=FALSE}
+save(fb_oauth2, file="fb_oauth")
+load("fb_oauth2")
+```
+
+Now, I can analyze information about my facebook account.  Unfortunately the ability to access much of the information from facebook has been limited in compared to in the past.  However, we can do a few items found at the url above. My personal account information was all NA, but I can show my 'like' information.  You will notice that running the below getLikes() command will allow me to store and analyze basic information about my 'likes'.
+
+```{r, echo=FALSE}
+myLikes = getLikes("me", token=fb_oauth)
+```
+
+The above 'my_users' is now a dataframe of all my likes.  I then went and hacked my mother's facebook account - I am not sure if that is illegal or not.  I pulled her informationand stored it using the same set of commands:
+
+```{r, echo=FALSE}
+save(fb_oauth2, file="fb_oauth2")
+load("fb_oauth2")
+myMomsLikes = getLikes("me", token=fb_oauth2)
+```
+
+Because the above are each dataframes, I can analyze them the same way I would any other dataframe in R.  In looking at my 'likes,' it appears that these are stored in a recency order; however, there is nothing to be able to see this from the data stored.  Overall, this is relatively uninformative compared to the true amount of data that facebook has stored about all of us.
+
+```{r, echo=FALSE}
+save(fb_oauth2, file="fb_oauth2")
+load("fb_oauth2")
+myMomsLikes = getLikes("me", token=fb_oauth2)
+```
+
+We can do some basic analysis of the data.  We could look to see the top few rows and last few rows.  We might also take a look at the dimension of the dataframe.  Below I can see that there are 42 likes (note these are not comments, but pages and profile likes).
+
+```{r, echo=FALSE}
+head(myMomsLikes)
+tail(myMomsLikes)
+dim(myMomsLikes)
+```
+
+For those familiar with SQL, we can incorporate SQL in R using the library sqldf. Then I can use native sql code within R.  The command within this library that you will want to call is then also sqldf()
+
+```{r, echo=FALSE}
+library(sqldf)
+```
+
+Imagine I want to look at all the columns that have a website regarding my hometown (lakemills).  I could write:
+
+```{r, echo=FALSE}
+sqldf('select * from myMomsLikes where website LIKE "%lakemills%"')
+```
+
+We can see she has liked three websites in Lake Mills.  Alternatively, we might be interested in seeing what likes she has that match mine:
+
+```{r, echo=FALSE}
+sqldf('select * from myMomsLikes join myLikes on myMomsLikes.names = myLikes.names')
+```
+
+Here, we can see that I share three likes with my mother.  We could do additional analysis that might also be done using SQL.  This is a friendly introduction to one way to collect one part of your facebook data (or friends or family).  
+
+```{r, echo=FALSE}
+myFriends = getGroup("Iowa State Run Club", token=fb_oauth)
+momsFriends = getGroup("me", token=fb_oauth2)
+```
+
+You can go through a similar process to download twitter data as shown in the following [video](https://www.youtube.com/watch?v=lT4Kosc_ers).  
+
+If you are looking to do more complicated mining, look at the Beautiful Soup package or the rvest package.  The rvest is still being updated by Hadley (the creator of ggplot2).

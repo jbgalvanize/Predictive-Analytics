@@ -1,0 +1,71 @@
+---
+title: "Introduction to R"
+author: "Josh Bernhard"
+date: "October 18, 2015"
+output: html_document
+---
+
+In this document I will attempt to show some of the basics of R that I use on a regular basis.  You can find one of many example introduction to R texts [here](https://cran.r-project.org/doc/manuals/R-intro.pdf).  You can also find courses to learn more about R through EdX, Coursera, and DataCamp all for free.
+
+Since we have all been using R a little pertaining directly to basic math and using functions pertaining to probability distributions, I will not discuss this portion within this document.  However, most of what I do in R is pertaining to data clearning, visual methods, and statistical analysis with data kept or obtained from outside R (not created within R like with the random draw functions we have been using up to this point).
+
+In the business world, we frequently have our documents kept in Excel spreadsheets.  Saving the individual sheets that you are interested in as .csv (comma separated) files will allow you an easy way to read them into R.  Running the below code will allow to read in your own data, which I have stored in data.  Rather than using file.choose(), you could put the path of the file you would like to read into R.  You should now see data in your environment in the top right hand side of your screen.  I have commented out in the code below.  You may choose to use # to comment in your code when hoping to relay a message for what your code does.
+
+```{r, echo=TRUE, tidy=TRUE, results="hide"}
+#data = read.csv(file.choose())
+```
+
+There are also a large number of datasets that are built into R's base package, as well as datasets within individual libraries within R.  Some of the most 'famous' datasets in the base package are the iris and mtcars datasets.  I frequently show the diamonds dataset within the ggplot2 library.  To get access to other libraries within R, you will need to install them.  To install these libraries, click Packages in the lower right hand window, choose install, and then type in the package name.  I would recommend installing the ggplot2 package to begin with.  You can always install other packages that are necessary as you need them.  Then to use this library run the following code:
+
+```{r, echo=TRUE, tidy=TRUE, results="hide"}
+library(ggplot2)
+```
+
+Now, we can use the builty in diamonds dataset.  A few commands that I frequently run upon reading in a dataset:
+
+```{r, echo=TRUE, tidy=TRUE, results="hide"}
+head(diamonds)
+tail(diamonds)
+str(diamonds)
+dim(diamonds)
+summary(diamonds)
+```
+
+What do each of these commands do?  What does factor mean within the str command?  Note you can also use the str and summary commands on specific rows of your dataset.  To pull a particular row we use [ ] attached to our dataset.  For example, if I wanted to pull only the carat column, I could write the following code.  I would not recommend printing the entire column, so I have specified head at the beginnining.  The square brackets use to pull rows to the left of the comma and columns to the left of the comma.  I remember it with the silly saying of 'race car' = 'rows columns'
+
+```{r, echo=TRUE, tidy=TRUE, results="hide"}
+head(diamonds[,1])
+str(diamonds[,1])
+```
+
+We can also ask for the max or minimum of a column using max and min rather than the summary command.
+
+We can use the base plot package to build some basic plots.  The hist command will allow us to build a histogram of any quantitative variable.  I have added some additional labels to show you some of the main arguments within the hist command.  You can see more by typing ?hist.  
+
+```{r, echo=TRUE, tidy=TRUE, results="hide"}
+hist(diamonds[,1], xlab = 'xlabel', ylab = 'ylabel', main = 'main title', breaks=20)
+?hist
+```
+
+One of the reasons to import ggplot2 is because it makes some very nice plots.  I frequently use the base qplot function.  However, you should note there are many ways to build plots using ggplot2.  You an see much of the functionality [here](http://www.statmethods.net/advgraphs/ggplot2.html).  They are using the built in mtcars dataset.  Note in the code below, I am retrieving the column I am interested in using dataset$column method. For the qplot, I provide the x-variable, then the y-variable, and I end with any added items I would like.  Here I specified the color, but you can see more using ?qplot or using Google!
+
+```{r, echo=TRUE, tidy=TRUE}
+qplot(diamonds$carat, diamonds$price, xlab = 'carat', ylab = 'price', main = 'carat by price', col=diamonds$clarity)
+```
+
+I frequently use the table, melt, cast, is.na, cut, and plotting commands within ggplot2.  In the business world, I find that people can understand better by seeing an image than with numbers.  There are also a ton of ways that can be used to model data, which are not discussed in this class.  It is so important to be able to work with data to understand the relationships that exist between multiple variables.
+
+To give yourself some additional practice:
+
+1. Create a new column that is the ratio of price/carat.  Add this column to your dataset.
+
+2. Create side by side box plots of price by clarity.  Create side by side box plots of carat by color.
+
+3. Think about how you might try to visualize the relationship between color and clarity.  What would be a useful plot to visualize the relationship between these two variables?
+
+There is an additional library called RCharts that also will allow you to build very nice visualizations of your data.  Additionally, there is a library known as Shiny that you might want to look into if you have some time.  
+
+Overall, there is a ton that you can do with data in R.  Here, I have hardly scratched the surface, but I hope that I have provided at least one reason for you to consider exploring your data using R.
+
+
+
